@@ -1,18 +1,46 @@
-import React from "react";
-import { NavLink } from "react-router";
+import React, { use } from "react";
+import { Link, NavLink } from "react-router";
+import { AuthContext } from "../../Context/AuthContext";
 
 const Header = () => {
+  const { user, signOutUser } = use(AuthContext);
+  const handleSignOut = () => {
+    signOutUser()
+      .then((result) => {
+        console.log("Sign Out Success", result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const links = (
     <>
       <li>
         <NavLink to="/">Home</NavLink>
       </li>
-      <li>
-        <NavLink to="/login">Login</NavLink>
-      </li>
-      <li>
-        <NavLink to="/register">Register</NavLink>
-      </li>
+
+      {!user && (
+        <>
+          {" "}
+          <li>
+            <NavLink to="/login">Login</NavLink>
+          </li>
+          <li>
+            <NavLink to="/register">Register</NavLink>
+          </li>{" "}
+        </>
+      )}
+
+      {user && (
+        <>
+          <li>
+            <NavLink to="/orders">Orders</NavLink>
+          </li>
+          <li>
+            <NavLink to="/profile">Profile</NavLink>
+          </li>
+        </>
+      )}
     </>
   );
   return (
@@ -48,8 +76,15 @@ const Header = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{links}</ul>
       </div>
+
       <div className="navbar-end">
-        <a className="btn">Button</a>
+        {user ? (
+          <a onClick={handleSignOut} className="btn">
+            Sign Out
+          </a>
+        ) : (
+          <Link to="/login">Login</Link>
+        )}
       </div>
     </div>
   );

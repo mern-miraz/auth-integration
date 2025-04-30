@@ -1,21 +1,20 @@
 import React, { use } from "react";
-import { Link } from "react-router";
-import { auth } from "../../firebase.init";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../Context/AuthContext";
 
 const Register = () => {
-  const authUser = use(AuthContext);
-  console.log(authUser);
+  const { createUser } = use(AuthContext);
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((user) => {
-        console.log(user);
+    createUser(email, password)
+      .then((result) => {
+        console.log(result);
+        navigate("/login");
       })
       .catch((error) => {
         console.log(error);
